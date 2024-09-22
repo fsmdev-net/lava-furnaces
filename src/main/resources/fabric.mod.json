@@ -3,13 +3,13 @@
 	"id": "lavafurnaces",
 	"version": "${version}",
 	"name": "Lava Furnaces",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "This mod makes furnaces, blast furnaces and smokers burn without needing fuel as long as they have a lava source beneath them.",
 	"authors": [
-		"Me!"
+		"FsmDev"
 	],
 	"contact": {
 		"homepage": "https://fsmdev.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"sources": "https://github.com/fsmdev-net/lava-furnaces"
 	},
 	"license": "CC0-1.0",
 	"icon": "assets/lavafurnaces/icon.png",
