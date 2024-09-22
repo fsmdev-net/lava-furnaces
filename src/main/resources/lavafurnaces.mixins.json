@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "net.fsmdev.lavafurnaces.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "FurnaceMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+	}
+}

@@ -1,0 +1,33 @@
+{
+	"schemaVersion": 1,
+	"id": "lavafurnaces",
+	"version": "${version}",
+	"name": "Lava Furnaces",
+	"description": "This is an example description! Tell everyone what your mod is about!",
+	"authors": [
+		"Me!"
+	],
+	"contact": {
+		"homepage": "https://fsmdev.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "CC0-1.0",
+	"icon": "assets/lavafurnaces/icon.png",
+	"environment": "*",
+	"entrypoints": {
+		"main": [
+			"net.fsmdev.lavafurnaces.LavaFurnaces"
+		]
+	},
+	"mixins": [
+		"lavafurnaces.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16",
+		"minecraft": "~1.21",
+		"java": ">=21"
+	},
+	"suggests": {
+		"another-mod": "*"
+	}
+}
