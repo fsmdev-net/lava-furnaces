@@ -3,6 +3,7 @@ package net.fsmdev.lavafurnaces.mixin;
 import net.fsmdev.lavafurnaces.FurnaceInterface;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.datafixer.fix.ChunkPalettedStorageFix;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.LavaFluid;
@@ -13,8 +14,10 @@ import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
@@ -53,10 +56,9 @@ public abstract class FurnaceMixin implements FurnaceInterface {
 
     @Inject(method="tick", at=@At("HEAD"))
     private static void tick(World world, BlockPos pos, BlockState state, AbstractFurnaceBlockEntity blockEntity, CallbackInfo ci) {
-        BlockPos blockBelowPos = pos.add(new Vec3i(0, -1, 0));
-        FluidState fluidState = world.getFluidState(blockBelowPos);
-        Fluid fluidBelow = fluidState.getFluid();
-        if (fluidBelow instanceof LavaFluid && fluidState.isStill()) {
+        Boolean fluidBelow = isFluidBelow(world,pos);
+        Boolean fluidBehind = isFluidBehind(world,pos,state);
+        if (fluidBelow || fluidBehind) {
             FurnaceInterface thisFurnace = ((FurnaceInterface)blockEntity);
              if (thisFurnace.getBurnTime() <= 0) {
                  DefaultedList<ItemStack> furnaceInventory = thisFurnace.getInventory();
@@ -68,5 +70,27 @@ public abstract class FurnaceMixin implements FurnaceInterface {
                  }
              }
         }
+    }
+
+    private static Boolean isFluidBelow(World world, BlockPos pos){
+        BlockPos blockBelowPos = pos.add(new Vec3i(0, -1, 0));
+        FluidState fluidState = world.getFluidState(blockBelowPos);
+        return fluidState.getFluid() instanceof LavaFluid && fluidState.isStill();
+    }
+
+    private static Boolean isFluidBehind(World world, BlockPos pos,BlockState state){
+        Direction direction = state.get(Properties.FACING);
+        return switch (direction){
+            case NORTH -> isLavaAt(pos.add(new Vec3i(0, 0, 1)),world);
+            case EAST -> isLavaAt(pos.add(new Vec3i(-1, 0, 0)),world);
+            case WEST -> isLavaAt(pos.add(new Vec3i(1, 0, 0)),world);
+            case SOUTH -> isLavaAt(pos.add(new Vec3i(0, 0, -1)),world);
+            default -> false;
+        };
+    }
+
+    private static Boolean isLavaAt(BlockPos pos,World world){
+        FluidState fluidState = world.getFluidState(pos);
+        return fluidState.getFluid() instanceof LavaFluid && fluidState.isStill();
     }
 }
